@@ -4,6 +4,8 @@ namespace Rappasoft\LaravelLivewireTables\Utilities;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -68,6 +70,10 @@ class ColumnUtilities
     public static function hasWildcardMatch($column, $searchColumns): bool
     {
         return count(array_filter($searchColumns ?? [], function ($searchColumn) use ($column) {
+            if ($searchColumn instanceof Expression) {
+                $searchColumn = $searchColumn->getValue(DB::connection()->getQueryGrammar());
+            }
+
             // Match wildcards such as * or table.*
             $hasWildcard = Str::endsWith($searchColumn, '*');
 
