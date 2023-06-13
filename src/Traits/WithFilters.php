@@ -188,7 +188,7 @@ trait WithFilters
                 // (e.g. consider that January 32 is February 1)
                 $dt = DateTime::createFromFormat("Y-m-d", $filterValue);
 
-                return $dt !== false && ! array_sum($dt::getLastErrors());
+                return $dt !== false && $dt::getLastErrors() === false;
             }
 
             if ($filterDefinitions[$filterName]->isDatetime()) {
@@ -197,7 +197,7 @@ trait WithFilters
                 // (e.g. consider that January 32 is February 1)
                 $dt = DateTime::createFromFormat("Y-m-d\TH:i", $filterValue);
 
-                return $dt !== false && ! array_sum($dt::getLastErrors());
+                return $dt !== false && $dt::getLastErrors() === false;
             }
 
             return false;
