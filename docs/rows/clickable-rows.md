@@ -3,71 +3,30 @@ title: Clickable Rows
 weight: 1
 ---
 
-If you would like to make the whole row clickable, you may use the `getTableRowUrl` method:
+To enable clickable rows on your table, you may add the following to the table component configuration:
 
 ```php
-public function getTableRowUrl($row): string
+public function configure(): void
 {
-    return route('my.edit.route', $row);
+    $this->setPrimaryKey('id')
+        ->setTableRowUrl(function($row) {
+            return route('admin.users.show', $row);
+        })
+        ->setTableRowUrlTarget(function($row) {
+            if ($row->isExternal()) {
+                return '_blank';
+            }
+
+            return '_self';
+        });
 }
 ```
 
-It will be passed the current model as `$row`.
-
-## Setting the target
-
-If you would like to set the click target to anything other than `_self` you may use the following method:
-
-**The following method is only available in v1.19 and above**
+If you would like to make a certain cell unclickable (i.e. if you have something else clickable in that cell), you may do so by adding the following to the column configuration:
 
 ```php
-public function getTableRowUrlTarget($row): ?string
-{
-    if ($row->type === 'this') {
-        return '_blank';
-    }
-
-    return null;
-}
+Column::make('Name')
+    ->unclickable(),
 ```
 
-## Working with links on clickable rows
-
-Since the row itself is clickable, you might have issues with event bubbling if you have links in your cells on top of the clickable rows. My current solution is to use Livewire to prevent the default action and stop the event bubbling and then redirect.
-
-For example, you have a link in a cell that's in a clickable row:
-
-```html
-<a href="#" wire:click.stop.prevent="redirectToModel('admin.auth.user.edit', [{{ $user }}])" class="font-medium">{{ $user->name }}</a>
-```
-
-The `.stop` will prevent the row click action from happening, the `.prevent` will preserve your URL history in case you are using `#` to control page content.
-
-Then in your table you need that method:
-
-```php
-public function redirectToModel(string $name, array $parameters = [], $absolute = true): void
-{
-    $this->redirectRoute($name, $parameters, $absolute);
-}
-```
-
-Now the blank space of the row should have its action, while your links go to their own action.
-
-## Working with `wire:click` on rows
-
-You can add the row-level Livewire clicks by utilizing the following method.
-
-```php
-public function getTableRowWireClick($row): ?string
-{
-    return "doSomething(" . $row->id . ")";
-}
-
-public function doSomething($id)
-{
-    // ...
-}
-```
-
-If you state both `getTableRowUrl` & `getTableRowWireClick`, the URL will supersede when a non-null value is supplied.
+**Note:** LinkColumns are not clickable by default to preserve the intended behavior of the link.

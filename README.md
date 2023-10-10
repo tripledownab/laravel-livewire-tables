@@ -5,6 +5,8 @@
 [![Tests](https://github.com/rappasoft/laravel-livewire-tables/actions/workflows/run-tests.yml/badge.svg)](https://github.com/rappasoft/laravel-livewire-tables/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/rappasoft/laravel-livewire-tables.svg?style=flat-square)](https://packagist.org/packages/rappasoft/laravel-livewire-tables)
 
+### Enjoying this package? [Buy me a beer 🍺](https://www.buymeacoffee.com/rappasoft)
+
 A dynamic Laravel Livewire component for data tables.
 
 ![Dark Mode](https://imgur.com/QoEdC7n.png)
@@ -20,6 +22,8 @@ You can install the package via composer:
 ``` bash
 composer require rappasoft/laravel-livewire-tables
 ```
+
+You must also have [Alpine.js](https://alpinejs.dev) version 3 or greater installed and available to the component.
 
 ## Documentation and Usage Instructions
 
@@ -39,41 +43,27 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 class UsersTable extends DataTableComponent
 {
+    protected $model = User::class;
+
+    public function configure(): void
+    {
+        $this->setPrimaryKey('id');
+    }
 
     public function columns(): array
     {
         return [
+            Column::make('ID', 'id')
+                ->sortable(),
             Column::make('Name')
-                ->sortable()
-                ->searchable(),
-            Column::make('E-mail', 'email')
-                ->sortable()
-                ->searchable(),
-            Column::make('Verified', 'email_verified_at')
                 ->sortable(),
         ];
     }
-
-    public function query(): Builder
-    {
-        return User::query();
-    }
 }
+
 ```
 
-### [See advanced example](https://rappasoft.com/docs/laravel-livewire-tables/v1/usage/advanced-example-table)
-
-## To-do/Roadmap
-
-- [x] Bootstrap 4 Template
-- [x] Bootstrap 5 Template
-- [x] Sorting By Relationships
-- [x] User Column Selection  
-- [x] Drag & Drop (beta)
-- [x] Column Search
-- [x] Greater Configurability
-- [ ] Collection/Query Support  
-- [ ] Test Suite (WIP)
+### [See advanced example](https://rappasoft.com/docs/laravel-livewire-tables/v2/examples/advanced-example)
 
 ## Testing
 
