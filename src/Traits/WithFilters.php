@@ -8,14 +8,19 @@ use Rappasoft\LaravelLivewireTables\Traits\Helpers\FilterHelpers;
 
 trait WithFilters
 {
-    use FilterConfiguration,
-        FilterHelpers;
 
+  use FilterConfiguration,
+        FilterHelpers;
+    /**
+     * @var bool
+     */
+    public bool $filtersEnabled = true;
     public bool $filtersStatus = true;
     public bool $filtersVisibilityStatus = true;
     public bool $filterPillsStatus = true;
     public bool $filterSlideDownDefaultVisible = false;
     public string $filterLayout = 'popover';
+
 
     public function filters(): array
     {
